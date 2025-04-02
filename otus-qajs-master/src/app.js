@@ -39,6 +39,8 @@ export const getTotal = (items = [], discount = 0) => {
   return total * (1 - discount / 100)
 }
 
+//ДЗ 01.04.2025
+
 function getScore(scores) {
   let totalScore = 0;
   for (let nick in scores) {
