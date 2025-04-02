@@ -39,6 +39,11 @@ export const getTotal = (items = [], discount = 0) => {
   return total * (1 - discount / 100)
 }
 
+/**
+ * Функция getScore принимает объект с никами и успеваемостью и возвращает сумму всех баллов.
+ * @param {Object} scores - Объект, где ключи - это ники, а значения - успеваемость.
+ * @returns {number} Сумма всех баллов.
+ */
 function getScore(scores) {
   let totalScore = 0;
   for (let nick in scores) {
