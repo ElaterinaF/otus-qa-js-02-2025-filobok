@@ -1,0 +1,27 @@
+{
+  "name": "otus-qa-js-02-2025-filobok",
+  "version": "1.0.0",
+  "description": "error\r ##123",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ElaterinaF/otus-qa-js-02-2025-filobok.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ElaterinaF/otus-qa-js-02-2025-filobok/issues"
+  },
+  "homepage": "https://github.com/ElaterinaF/otus-qa-js-02-2025-filobok#readme",
+  "dependencies": {
+    "@playwright/test": "^1.51.1",
+    "axios": "^1.8.4",
+    "jest": "^29.7.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {}
+}
