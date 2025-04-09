@@ -1,3 +1,4 @@
+import { UserService } from '../specs/user.spec';
 const { test, expect, request } = require('@playwright/test');
 
 const BASE_URL = 'https://bookstore.demoqa.com/Account/v1/Authorized';
@@ -6,23 +7,19 @@ const GET_USER_URL = 'https://bookstore.demoqa.com/Account/v1/User/{UUID}';
 
 test.describe('API Tests for User Management', () => {
     let apiContext;
+    let userService;
     const validUserName = 'valid_user'; 
     const validPassword = 'valid_password'; 
 
     test.beforeAll(async () => {
         apiContext = await request.newContext();
+        userService = new UserService(apiContext);
     });
 
     test('Should return 404 for non-existing user', async () => {
-        const response = await apiContext.post(BASE_URL, {
-            data: {
-                userName: 'non_existing_user',
-                password: 'wrong_password'
-            },
-            headers: {
-                'accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
+        const response = await userService.auth({
+            userName: 'non_existing_user',
+            password: 'wrong_password'
         });
 
         const responseBody = await response.json();
@@ -35,15 +32,9 @@ test.describe('API Tests for User Management', () => {
     });
 
     test('Should return 400 for invalid request', async () => {
-        const response = await apiContext.post(BASE_URL, {
-            data: {
-                userName: '',
-                password: ''
-            },
-            headers: {
-                'accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
+        const response = await userService.auth({
+            userName: '',
+            password: ''
         });
 
         const responseBody = await response.json();
@@ -56,15 +47,9 @@ test.describe('API Tests for User Management', () => {
     });
 
     test('Should return 200 for valid user', async () => {
-        const response = await apiContext.post(BASE_URL, {
-            data: {
-                userName: validUserName,
-                password: validPassword
-            },
-            headers: {
-                'accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
+        const response = await userService.auth({
+            userName: validUserName,
+            password: validPassword
         });
 
         expect(response.status()).toBe(200);
@@ -73,11 +58,7 @@ test.describe('API Tests for User Management', () => {
     });
 
     test('Should return user information successfully', async () => {
-        const response = await apiContext.get(GET_USER_URL.replace('{UUID}', validUserName), {
-            headers: {
-                'accept': 'application/json',
-            },
-        });
+        const response = await userService.getUser(validUserName);
 
         expect(response.status()).toBe(200);
         const responseBody = await response.json();
@@ -89,11 +70,7 @@ test.describe('API Tests for User Management', () => {
     });
 
     test('Should return 401 for unauthorized user information request', async () => {
-        const response = await apiContext.get(GET_USER_URL.replace('{UUID}', 'invalid_user_id'), {
-            headers: {
-                'accept': 'application/json',
-            },
-        });
+        const response = await userService.getUser('invalid_user_id');
 
         expect(response.status()).toBe(401);
         const responseBody = await response.json();
@@ -105,11 +82,7 @@ test.describe('API Tests for User Management', () => {
 
     test('Should return 200 for successful user deletion', async () => {
         const userId = validUserName; 
-        const response = await apiContext.delete(DELETE_URL.replace('{UUID}', userId), {
-            headers: {
-                'accept': 'application/json',
-            },
-        });
+        const response = await userService.deleteUser(userId);
 
         expect(response.status()).toBe(200);
         const responseBody = await response.json();
@@ -121,11 +94,7 @@ test.describe('API Tests for User Management', () => {
 
     test('Should return 401 for unauthorized user deletion', async () => {
         const userId = 'invalid_user_id';
-        const response = await apiContext.delete(DELETE_URL.replace('{UUID}', userId), {
-            headers: {
-                'accept': 'application/json',
-            },
-        });
+        const response = await userService.deleteUser(userId);
 
         expect(response.status()).toBe(401);
         const responseBody = await response.json();
