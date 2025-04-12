@@ -1,4 +1,4 @@
-import { nameIsValid, fullTrim, getTotal } from "../../../src/app";
+import { nameIsValid, fullTrim, getTotal } from "../src/app";
 
 describe('Проверка имени пользователя', () => {
     test('Возвращает true для валидного имени', () => {
