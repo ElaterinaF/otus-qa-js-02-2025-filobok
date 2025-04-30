@@ -4,7 +4,8 @@
   "description": "error\r ##123",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:report": "jest --reporters=default --reporters=jest-html-reporter"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,9 @@
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.27.1",
+    "@babel/preset-env": "^7.27.1",
+    "jest-html-reporter": "^4.1.0",
     "jest-html-reporters": "^3.1.7"
   }
 }
