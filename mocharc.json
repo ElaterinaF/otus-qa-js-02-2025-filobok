@@ -1,0 +1,4 @@
+{
+    "require": "esm",
+    "spec": "src/specs/**/*.js"
+}

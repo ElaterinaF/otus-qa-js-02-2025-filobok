@@ -4,7 +4,7 @@
   "description": "error\r ##123",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,7 @@
     "jest": "^29.7.0",
     "node-fetch": "^3.3.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "jest-html-reporters": "^3.1.7"
+  }
 }
