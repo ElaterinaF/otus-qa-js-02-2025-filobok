@@ -12,7 +12,7 @@ const config = {
           filename: "report.html",
           expand: true,
           openReport: true,
-          includeConsoleLog: true,
+          includeConsoleLog: true, // Добавлено для отображения логов
         }
       ]
     ],
@@ -20,3 +20,5 @@ const config = {
       '^@/(.*)$': '<rootDir>/src/$1',
     },
   };
+
+  module.exports = config;
