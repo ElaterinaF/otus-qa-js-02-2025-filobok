@@ -12,7 +12,7 @@ const config = {
           filename: "report.html",
           expand: true,
           openReport: true,
-          includeConsoleLog: true, // Добавлено для отображения логов
+          includeConsoleLog: true,
         }
       ]
     ],
@@ -20,8 +20,3 @@ const config = {
       '^@/(.*)$': '<rootDir>/src/$1',
     },
   };
-  
-  // Для отладки: проверка, что конфиг загружен (необязательно)
-  console.log("Jest config loaded successfully!");
-  
-  module.exports = config;
