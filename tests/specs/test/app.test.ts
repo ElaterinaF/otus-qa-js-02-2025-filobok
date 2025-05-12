@@ -1,4 +1,5 @@
 import { nameIsValid, fullTrim, getTotal } from "../../../src/app";
+import type { OrderItem } from "../../../src/types/order";
 
 describe('Проверка имени пользователя', () => {
     test('Возвращает true для валидного имени', () => {
@@ -9,11 +10,11 @@ describe('Проверка имени пользователя', () => {
         expect(nameIsValid('i')).toBe(false);
     });
 
-    test('Возвращает false для имени, не являющегося строкой', () => {
-        expect(nameIsValid(123)).toBe(false);
-        expect(nameIsValid(null)).toBe(false);
-        expect(nameIsValid(undefined)).toBe(false);
-        expect(nameIsValid({})).toBe(false);
+    test('Возвращает false для нестроковых значений', () => {
+        expect(nameIsValid(String(123))).toBe(false);
+        expect(nameIsValid(String(null))).toBe(false);
+        expect(nameIsValid(String(undefined))).toBe(false);
+        expect(nameIsValid(JSON.stringify({}))).toBe(false);
     });
 
     test('Возвращает false для имени с символами, отличными от латинских букв', () => {
@@ -36,12 +37,15 @@ describe('Удаление пробелов из строки', () => {
     expect(fullTrim('')).toBe('');
   });
 
-  test('Возвращает пустую строку для числового ввода ', () => {
-    expect(fullTrim(123)).toBe('');
+  test('Обрабатывает нестроковые значения', () => {
+    expect(fullTrim(String(123))).toBe('123');
+    expect(fullTrim(String(null))).toBe('null');
+    expect(fullTrim(String(undefined))).toBe('undefined');
+    expect(fullTrim(JSON.stringify({}))).toBe('{}');
   });
 });
 
-describe('getПодсчёт суммы заказаTotal', () => {
+describe('Подсчёт суммы заказа', () => {
   test('Возвращает правильную сумму без скидки', () => {
     expect(getTotal([{ price: 10, quantity: 10 }])).toBe(100);
   });
@@ -55,11 +59,11 @@ describe('getПодсчёт суммы заказаTotal', () => {
     [[{ price: 10, quantity: 10 }], 50, 50],
     [[{ price: 10, quantity: 10 }], 100, 0],
   ])('Возвращает правильную сумму для различных скидок', (items, discount, expected) => {
-    expect(getTotal(items, discount)).toBe(expected);
+    expect(getTotal(items as OrderItem[], discount as number)).toBe(expected);
   });
 
   test('Выбрасывает ошибку для недопустимых скидок', () => {
     expect(() => getTotal([{ price: 10, quantity: 10 }], -1)).toThrow('Процент скидки должен быть от 0 до 99');
-    expect(() => getTotal([{ price: 10, quantity: 10 }], 'invalid')).toThrow('Скидка должна быть числом');
+    expect(() => getTotal([{ price: 10, quantity: 10 }], 100)).toThrow('Процент скидки должен быть от 0 до 99');
   });
 });

@@ -1,81 +1,104 @@
-import { createBook, updateBook, getBook, deleteBook } from '../framework/services/bookController';
-import { validBookData, invalidBookData } from '../framework/fixtures/bookFixtures';
+import { createBook, updateBook, getBook, deleteBook, Book } from '../../framework/services/bookController';
+import { validBookData } from '../../framework/fixtures/bookFixtures';
 import { expect } from '@jest/globals';
-import { credentials } from '../framework/config/config';
+import { credentials } from '../../framework/config/config';
 
 describe('Book API Tests', () => {
-    let createdBookISBN;
+  let createdBookISBN: string;
 
-    test('должен создавать книгу с корректными данными', async () => {
-        const bookData = {
-            userId: credentials.userId, // Используем userId из конфигурации
-            collectionOfIsbns: [
-                {
-                    isbn: validBookData.collectionOfIsbns[0].isbn // используем ISBN из фикстуры
-                }
-            ]
-        };
+  beforeAll(async () => {
+    const bookData: Book = {
+      isbn: validBookData.collectionOfIsbns[0].isbn,
+      userId: credentials.userId,
+      collectionOfIsbns: [
+        {
+          isbn: validBookData.collectionOfIsbns[0].isbn
+        }
+      ]
+    };
 
-        const createdBook = await createBook(bookData);
-        createdBookISBN = createdBook.collectionOfIsbns[0].isbn; // Сохраняем ISBN созданной книги
-        expect(createdBook).toHaveProperty('isbn', bookData.collectionOfIsbns[0].isbn);
-    });
+    const createdBook = await createBook(bookData);
+    createdBookISBN = createdBook.isbn;
+  });
 
-    test('должен обновлять книгу с корректными данными', async () => {
-        const updatedBookData = {
-            userId: credentials.userId, // Используем userId из конфигурации
-            isbn: createdBookISBN // используем ISBN созданной книги
-        };
+  test('должен создавать книгу с корректными данными', () => {
+    expect(createdBookISBN).toBe(validBookData.collectionOfIsbns[0].isbn);
+  });
 
-        const updatedBook = await updateBook(updatedBookData);
-        expect(updatedBook).toHaveProperty('isbn', updatedBookData.isbn);
-    });
+  test('должен обновлять книгу с корректными данными', async () => {
+    const updatedBookData: Book = {
+      isbn: createdBookISBN,
+      userId: credentials.userId
+    };
 
-    test('должен не обновлять книгу без авторизации', async () => {
-        const updatedBookData = {
-            userId: credentials.userId, // Используем userId из конфигурации
-            isbn: createdBookISBN // используем ISBN созданной книги
-        };
+    const updatedBook = await updateBook(updatedBookData);
+    expect(updatedBook).toHaveProperty('isbn', createdBookISBN);
+  });
 
-        await expect(updateBook(updatedBookData)).rejects.toThrow(); // Проверяем, что выбрасывается ошибка
-    });
+  test('должен не обновлять книгу без авторизации', async () => {
+    const updatedBookData: Book = {
+      isbn: createdBookISBN,
+      userId: credentials.userId
+    };
 
-    // Параметризированный тест на получение книги
-    const isbnList = [
-        { isbn: createdBookISBN, expectedStatus: 200 }, // Ожидаем успешный ответ для созданной книги
-        { isbn: '978-3-16-148410-1', expectedStatus: 400 } // Ожидаем ошибку для несуществующей книги
+    await expect(updateBook(updatedBookData)).rejects.toThrow();
+  });
+
+  // Параметризированные тесты
+  describe('Получение книги', () => {
+    const testCases = [
+      {
+        name: 'должен получать существующую книгу',
+        isbn: createdBookISBN,
+        shouldPass: true
+      },
+      {
+        name: 'должен возвращать ошибку для несуществующей книги',
+        isbn: '978-3-16-148410-1',
+        shouldPass: false
+      }
     ];
 
-    isbnList.forEach(({ isbn, expectedStatus }) => {
-        test(`должен получать книгу с ISBN: ${isbn}`, async () => {
-            if (expectedStatus === 200) {
-                const book = await getBook(isbn);
-                expect(book).toHaveProperty('isbn', isbn);
-            } else {
-                await expect(getBook(isbn)).rejects.toThrow(); // Проверяем, что выбрасывается ошибка
-            }
-        });
+    testCases.forEach(({ name, isbn, shouldPass }) => {
+      test(name, async () => {
+        if (shouldPass) {
+          const book = await getBook(isbn);
+          expect(book).toHaveProperty('isbn', isbn);
+        } else {
+          await expect(getBook(isbn)).rejects.toThrow();
+        }
+      });
     });
+  });
 
-    // Параметризированный тест на удаление книги
-    const deleteTestCases = [
-        { isbn: createdBookISBN, expectedStatus: 204 }, // Ожидаем успешный ответ для удаленной книги
-        { isbn: '978-3-16-148410-1', expectedStatus: 400 } // Ожидаем ошибку для несуществующей книги
+  describe('Удаление книги', () => {
+    const testCases = [
+      {
+        name: 'должен удалять существующую книгу',
+        isbn: createdBookISBN,
+        shouldPass: true
+      },
+      {
+        name: 'должен возвращать ошибку для несуществующей книги',
+        isbn: '978-3-16-148410-1',
+        shouldPass: false
+      }
     ];
 
-    deleteTestCases.forEach(({ isbn, expectedStatus }) => {
-        test(`должен ${expectedStatus === 204 ? 'удалить' : 'не удалить'} книгу с ISBN: ${isbn}`, async () => {
-            const deleteData = {
-                userId: credentials.userId, // Используем userId из конфигурации
-                isbn: isbn
-            };
+    testCases.forEach(({ name, isbn, shouldPass }) => {
+      test(name, async () => {
+        const deleteData: Book = {
+          isbn,
+          userId: credentials.userId
+        };
 
-            if (expectedStatus === 204) {
-                const response = await deleteBook(deleteData);
-                expect(response).toHaveProperty('message', "Book deleted successfully"); // Убедитесь, что сообщение соответствует вашему API
-            } else {
-                await expect(deleteBook(deleteData)).rejects.toThrow(); // Проверяем, что выбрасывается ошибка
-            }
-        });
+        if (shouldPass) {
+          const response = await deleteBook(deleteData);
+          expect(response).toHaveProperty('message', "Book deleted successfully");
+        } else {
+          await expect(deleteBook(deleteData)).rejects.toThrow();
+        }
+      });
     });
+  });
 });

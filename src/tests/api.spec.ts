@@ -1,5 +1,5 @@
-import { UserGenerator } from '../src/specs/user.spec';
-const { test, expect } = require('@playwright/test');
+import { UserGenerator } from '../specs/user.spec';
+import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'https://bookstore.demoqa.com/Account/v1/User';
 
@@ -13,7 +13,7 @@ test.describe('API Tests for User Creation and Token Generation', () => {
       }
     });
     expect(response.status()).toBe(406);
-    const responseBody = await response.json();
+    const responseBody = await response.json() as { code: string; message: string };
     expect(responseBody.code).toBe("1300");
     expect(responseBody.message).toContain("логин уже используется");
   });
@@ -26,7 +26,7 @@ test.describe('API Tests for User Creation and Token Generation', () => {
       }
     });
     expect(response.status()).toBe(400);
-    const responseBody = await response.json();
+    const responseBody = await response.json() as { code: string; message: string };
     expect(responseBody.code).toBe("1300");
     expect(responseBody.message).toContain("Passwords must have at least one non alphanumeric character");
   });
@@ -42,7 +42,7 @@ test.describe('API Tests for User Creation and Token Generation', () => {
       }
     });
     expect(response.status()).toBe(201);
-    const responseBody = await response.json();
+    const responseBody = await response.json() as { userID: string; username: string };
     expect(responseBody).toHaveProperty('userID'); 
     expect(responseBody.username).toBe(userName); 
   });
@@ -55,7 +55,7 @@ test.describe('API Tests for User Creation and Token Generation', () => {
       }
     });
     expect(response.status()).toBe(400);
-    const responseBody = await response.json();
+    const responseBody = await response.json() as { code: string; message: string };
     expect(responseBody.code).toBe("1300");
     expect(responseBody.message).toContain("неверный логин или пароль");
   });
@@ -68,7 +68,7 @@ test.describe('API Tests for User Creation and Token Generation', () => {
       }
     });
     expect(response.status()).toBe(200);
-    const responseBody = await response.json();
+    const responseBody = await response.json() as { token: string; expires: string; status: string; result: string };
     expect(responseBody).toHaveProperty('token');
   });
 });

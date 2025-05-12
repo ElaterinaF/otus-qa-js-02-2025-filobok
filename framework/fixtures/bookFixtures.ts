@@ -1,25 +1,33 @@
-const generateBookData = (overrides = {}) => {
-    const defaultBookData = {
-        collectionOfIsbns: [
-            {
-                isbn: "978-3-16-148410-0" // пример корректного ISBN
-            }
-        ]
+interface ISBN {
+    isbn: string;
+  }
+  
+  interface BookData {
+    collectionOfIsbns: ISBN[];
+    [key: string]: any; 
+  }
+  
+  const generateBookData = (overrides: Partial<BookData> = {}): BookData => {
+    const defaultBookData: BookData = {
+      collectionOfIsbns: [
+        {
+          isbn: "978-3-16-148410-0" // пример корректного ISBN
+        }
+      ]
     };
-
+  
     return {
-        ...defaultBookData,
-        ...overrides
+      ...defaultBookData,
+      ...overrides
     };
-};
-
-const validBookData = generateBookData();
-const invalidBookData = generateBookData({ collectionOfIsbns: [{ isbn: '' }] }); // Пример некорректных данных
-
-export default {
+  };
+  
+  const validBookData: BookData = generateBookData();
+  const invalidBookData: BookData = generateBookData({ collectionOfIsbns: [{ isbn: '' }] });
+  
+  export {
     validBookData,
     invalidBookData,
     generateBookData
-};
-
-
+  };
+  export type { BookData, ISBN };
