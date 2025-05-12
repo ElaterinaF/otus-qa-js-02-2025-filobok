@@ -1,74 +1,77 @@
-import { UserGenerator } from '../specs/user.spec';
-import { test, expect } from '@playwright/test';
+import axios from 'axios';
+import { describe, it, expect } from '@jest/globals';
+import { UserGenerator } from '../../framework/services/user.helpers';
 
 const BASE_URL = 'https://bookstore.demoqa.com/Account/v1/User';
 
-test.describe('API Tests for User Creation and Token Generation', () => {
+describe('API Tests for User Creation and Token Generation', () => {
   
-  test('Создание пользователя с ошибкой, логин уже используется', async ({ request }) => {
-    const response = await request.post(BASE_URL, {
-      data: {
+  it('Создание пользователя с ошибкой, логин уже используется', async () => {
+    try {
+      await axios.post(BASE_URL, {
         userName: "existingUser",
         password: "ValidPass1!"
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        expect(error.response?.status).toBe(406);
+        expect(error.response?.data.code).toBe("1204");
+        expect(error.response?.data.message).toContain("User exists!");
       }
-    });
-    expect(response.status()).toBe(406);
-    const responseBody = await response.json() as { code: string; message: string };
-    expect(responseBody.code).toBe("1300");
-    expect(responseBody.message).toContain("логин уже используется");
+    }
   });
 
-  test('Создание пользователя с ошибкой, пароль не подходит', async ({ request }) => {
-    const response = await request.post(BASE_URL, {
-      data: {
+  it('Создание пользователя с ошибкой, пароль не подходит', async () => {
+    try {
+      await axios.post(BASE_URL, {
         userName: "newUser",
         password: "short"
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        expect(error.response?.status).toBe(400);
+        expect(error.response?.data.code).toBe("1300");
+        expect(error.response?.data.message).toContain("Passwords must have at least one non alphanumeric character");
       }
-    });
-    expect(response.status()).toBe(400);
-    const responseBody = await response.json() as { code: string; message: string };
-    expect(responseBody.code).toBe("1300");
-    expect(responseBody.message).toContain("Passwords must have at least one non alphanumeric character");
+    }
   });
 
-  test('Создание пользователя успешно', async ({ request }) => {
+  it('Создание пользователя успешно', async () => {
     const userName = UserGenerator.genName(); 
     const password = UserGenerator.genPassword();
 
-    const response = await request.post(BASE_URL, {
-      data: {
-        userName: userName,
-        password: password
-      }
+    const response = await axios.post(BASE_URL, {
+      userName,
+      password
     });
-    expect(response.status()).toBe(201);
-    const responseBody = await response.json() as { userID: string; username: string };
-    expect(responseBody).toHaveProperty('userID'); 
-    expect(responseBody.username).toBe(userName); 
+    
+    expect(response.status).toBe(201);
+    expect(response.data).toHaveProperty('userID'); 
+    expect(response.data.username).toBe(userName); 
   });
 
-  test('Генерация токена с ошибкой', async ({ request }) => {
-    const response = await request.post('https://bookstore.demoqa.com/Account/v1/GenerateToken', {
-      data: {
+  it('Генерация токена с ошибкой', async () => {
+    try {
+      await axios.post('https://bookstore.demoqa.com/Account/v1/GenerateToken', {
         userName: "nonExistentUser",
         password: "InvalidPass!"
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        expect(error.response?.status).toBe(400);
+        expect(error.response?.data.code).toBe("1300");
+        expect(error.response?.data.message).toContain("неверный логин или пароль");
       }
-    });
-    expect(response.status()).toBe(400);
-    const responseBody = await response.json() as { code: string; message: string };
-    expect(responseBody.code).toBe("1300");
-    expect(responseBody.message).toContain("неверный логин или пароль");
+    }
   });
 
-  test('Генерация токена успешно', async ({ request }) => {
-    const response = await request.post('https://bookstore.demoqa.com/Account/v1/GenerateToken', {
-      data: {
-        userName: "newUser123", 
-        password: "ValidPass1!"
-      }
+  it('Генерация токена успешно', async () => {
+    const response = await axios.post('https://bookstore.demoqa.com/Account/v1/GenerateToken', {
+      userName: "newUser123", 
+      password: "ValidPass1!"
     });
-    expect(response.status()).toBe(200);
-    const responseBody = await response.json() as { token: string; expires: string; status: string; result: string };
-    expect(responseBody).toHaveProperty('token');
+    
+    expect(response.status).toBe(200);
+    expect(response.data).toHaveProperty('token');
   });
 });

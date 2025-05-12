@@ -3,10 +3,15 @@
   "version": "1.0.0",
   "description": "error\r ##123",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "jest",
+    "test": "set NODE_OPTIONS=--experimental-vm-modules --no-warnings&& jest",
+    "test:ci": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "type-check": "tsc --noEmit",
-    "test:report": "jest --reporters=default --reporters=jest-html-reporter"
+    "test:report": "jest --reporters=default --reporters=jest-html-reporter",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -27,17 +32,24 @@
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
-    "@babel/preset-env": "^7.27.1",
+    "@babel/plugin-transform-runtime": "^7.27.1",
+    "@babel/preset-env": "^7.27.2",
     "@babel/preset-typescript": "^7.27.1",
-    "@eslint/js": "^9.25.1",
+    "@babel/runtime": "^7.27.1",
+    "@eslint/js": "^9.26.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.3",
     "@types/prettier": "^2.7.3",
     "@types/react": "^19.1.2",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
     "@typescript-eslint/parser": "^8.31.1",
-    "eslint": "^9.25.1",
-    "globals": "^16.0.0",
+    "babel-jest": "^29.7.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.26.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.1.0",
     "jest-html-reporter": "^4.1.0",
     "jest-html-reporters": "^3.1.7",
     "prettier": "^3.5.3",
@@ -45,6 +57,6 @@
     "ts-migrate": "^0.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.31.1"
+    "typescript-eslint": "^8.32.1"
   }
 }
