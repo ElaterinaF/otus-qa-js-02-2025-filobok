@@ -20,8 +20,4 @@ const config = {
       '^@/(.*)$': '<rootDir>/src/$1',
     },
   };
-  
-  // Для отладки: проверка, что конфиг загружен (необязательно)
-  console.log("Jest config loaded successfully!");
-  
   module.exports = config;

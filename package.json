@@ -4,7 +4,9 @@
   "description": "error\r ##123",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "type-check": "tsc --noEmit",
+    "test:report": "jest --reporters=default --reporters=jest-html-reporter"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,25 @@
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "jest-html-reporters": "^3.1.7"
+    "@babel/core": "^7.27.1",
+    "@babel/preset-env": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@eslint/js": "^9.25.1",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.15.3",
+    "@types/prettier": "^2.7.3",
+    "@types/react": "^19.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.31.1",
+    "@typescript-eslint/parser": "^8.31.1",
+    "eslint": "^9.25.1",
+    "globals": "^16.0.0",
+    "jest-html-reporter": "^4.1.0",
+    "jest-html-reporters": "^3.1.7",
+    "prettier": "^3.5.3",
+    "ts-jest": "^29.3.2",
+    "ts-migrate": "^0.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.1"
   }
 }
