@@ -1,5 +1,11 @@
-name: Node.js CI
+name: CI/CD Pipeline
+
 on: [push]
+
+permissions:
+  contents: write  
+  pages: write     
+  id-token: write  
 
 jobs:
   test:
@@ -7,14 +13,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
       - run: npm install
       - run: npm test
+
       - name: Deploy to GitHub Pages
-        if: always() 
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # Автоматически доступен
           publish_dir: ./
           publish_branch: gh-pages
           keep_files: true
-          force_orphan: true
+
+      - name: Send Telegram Notification
+        uses: appleboy/telegram-action@master
+        with:
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          message: |
+            🚀 Тесты завершены!
+            Репозиторий: ${{ github.repository }}
+            Статус: ${{ job.status }}
+            Отчёт: https://${{ github.repository_owner }}.github.io/otus-qa-js-02-2025-filobok/test-report.html
