@@ -1,4 +1,4 @@
-function kolobok(characterName) {
+function kolobok(characterName: any) {
   switch (characterName) {
     case 'дедушка':
       return 'Я от дедушки ушёл'
@@ -14,7 +14,7 @@ function kolobok(characterName) {
 console.log(kolobok('дедушка'))
 console.log(kolobok('лиса'))
 
-function newYear(character) {
+function newYear(character: any) {
   return `${character}! `.repeat(3)
 }
 
