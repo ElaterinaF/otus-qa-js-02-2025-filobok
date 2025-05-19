@@ -5,19 +5,13 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "jest --runInBand --detectOpenHandles",
-    "test:ci": "jest --runInBand --ci --reporters=default --reporters=jest-html-reporters",
+    "test": "jest --config=jest.config.js --runInBand --detectOpenHandles",
+    "test:ci": "jest --config=jest.config.js --runInBand --ci",
     "type-check": "tsc --noEmit",
     "test:report": "jest --reporters=default --reporters=jest-html-reporter",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write ."
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "transformIgnorePatterns": [
-      "node_modules/(?!axios)"
-    ]
   },
   "repository": {
     "type": "git",
