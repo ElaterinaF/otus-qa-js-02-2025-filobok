@@ -49,18 +49,18 @@ export const getTotal = (items: Item[] = [], discount: any = 0): number => {
  * @param {Object} scores - Объект, где ключи - это ники, а значения - успеваемость.
  * @returns {number} Сумма всех баллов.
  */
-function getScore(scores: Record<string, number>): number {
-  let totalScore = 0;
-  for (let nick in scores) {
-    totalScore += scores[nick];
-  }
-  return totalScore;
-}
+// function getScore(scores: Record<string, number>): number {
+//   let totalScore = 0;
+//   for (let nick in scores) {
+//     totalScore += scores[nick];
+//   }
+//   return totalScore;
+// }
 
-const scores = {
-  Anna: 10,
-  Olga: 1,
-  Ivan: 5,
-};
+// const scores = {
+//   Anna: 10,
+//   Olga: 1,
+//   Ivan: 5,
+// };
 
-console.log(getScore(scores));
+// console.log(getScore(scores));

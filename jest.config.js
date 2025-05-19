@@ -1,23 +1,37 @@
-/** @type {import('jest').Config} */
 const config = {
-    maxWorkers: 4,
-    maxRetries: 5,
-    workerIdleMemoryLimit: '512MB',
-    reporters: [
-      'default',
-      [
-        'jest-html-reporters',
-        {
-          publicPath: "./reports",
-          filename: "report.html",
-          expand: true,
-          openReport: true,
-          includeConsoleLog: true, // Добавлено для отображения логов
-        }
-      ]
-    ],
-    moduleNameMapper: {
-      '^@/(.*)$': '<rootDir>/src/$1',
-    },
-  };
-  module.exports = config;
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.json',
+        useESM: true,
+        // Убрали isolatedModules (перенесём в tsconfig.json)
+      }
+    ]
+  },
+  extensionsToTreatAsEsm: ['.ts'],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1'
+  },
+  reporters: [
+    'default',
+    [
+      'jest-html-reporters',
+      {
+        publicPath: './reports',
+        filename: 'report.html',
+        expand: true,
+        includeConsoleLog: true,
+        openReport: true 
+      }
+    ]
+  ],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  testPathIgnorePatterns: ['/node_modules/'],
+  maxWorkers: 1
+};
+
+export default config;

@@ -1,6 +1,6 @@
 import { createBook, updateBook, getBook, deleteBook, Book } from '../../framework/services/bookController';
 import { validBookData } from '../../framework/fixtures/bookFixtures';
-import { expect } from '@jest/globals';
+import { describe, it, expect } from '@jest/globals';
 import { credentials } from '../../framework/config/config';
 
 describe('Book API Tests', () => {

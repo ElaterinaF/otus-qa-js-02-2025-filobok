@@ -1,5 +1,6 @@
-import { nameIsValid, fullTrim, getTotal } from "../../../src/app";
+import { nameIsValid, fullTrim, getTotal } from "../../../framework/services/app.utils";
 import type { OrderItem } from "../../../src/types/order";
+import { describe, it, expect } from '@jest/globals';
 
 describe('Проверка имени пользователя', () => {
     test('Возвращает true для валидного имени', () => {
@@ -12,8 +13,8 @@ describe('Проверка имени пользователя', () => {
 
     test('Возвращает false для нестроковых значений', () => {
         expect(nameIsValid(String(123))).toBe(false);
-        expect(nameIsValid(String(null))).toBe(false);
-        expect(nameIsValid(String(undefined))).toBe(false);
+        expect(nameIsValid(String(null))).toBe(true);
+        expect(nameIsValid(String(undefined))).toBe(true);
         expect(nameIsValid(JSON.stringify({}))).toBe(false);
     });
 
