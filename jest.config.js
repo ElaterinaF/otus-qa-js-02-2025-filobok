@@ -1,4 +1,3 @@
-/** @type {import('jest').Config} */
 const config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
@@ -8,31 +7,31 @@ const config = {
       'ts-jest',
       {
         tsconfig: 'tsconfig.json',
-        useESM: false, 
-        isolatedModules: true 
+        useESM: true,
+        // Убрали isolatedModules (перенесём в tsconfig.json)
       }
     ]
+  },
+  extensionsToTreatAsEsm: ['.ts'],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1'
   },
   reporters: [
     'default',
     [
       'jest-html-reporters',
       {
-        publicPath: "./reports",
-        filename: "report.html",
+        publicPath: './reports',
+        filename: 'report.html',
         expand: true,
         includeConsoleLog: true,
+        openReport: true 
       }
     ]
   ],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testPathIgnorePatterns: ['/node_modules/'],
-  maxWorkers: 1, 
-  globals: {
-    'ts-jest': {
-      diagnostics: false 
-    }
-  }
+  maxWorkers: 1
 };
 
-module.exports = config; 
+export default config;

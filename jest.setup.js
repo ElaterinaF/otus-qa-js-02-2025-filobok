@@ -1,3 +1,3 @@
-const { jest } = require('@jest/globals');
-global.jest = jest;
+import { jest } from '@jest/globals';
+globalThis.jest = jest;
 jest.setTimeout(30000);

@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "error\r ##123",
   "main": "index.js",
-  "type": "module",
+ "type": "module",
   "scripts": {
-    "test": "jest --config=jest.config.js --runInBand --detectOpenHandles",
-    "test:ci": "jest --config=jest.config.js --runInBand --ci",
+    "test": "set NODE_OPTIONS=--experimental-vm-modules&& jest --config=jest.config.js --runInBand --detectOpenHandles",
+    "test:ci": "set NODE_OPTIONS=--experimental-vm-modules&& jest --config=jest.config.js --runInBand --ci --reporters=default --reporters=jest-html-reporters",
     "type-check": "tsc --noEmit",
-    "test:report": "jest --reporters=default --reporters=jest-html-reporter",
+    "test:report": "set NODE_OPTIONS=--experimental-vm-modules&& jest --reporters=default --reporters=jest-html-reporters",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write ."
