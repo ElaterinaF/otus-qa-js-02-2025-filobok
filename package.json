@@ -5,13 +5,19 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "set NODE_OPTIONS=--experimental-vm-modules --no-warnings&& jest",
-    "test:ci": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "jest --runInBand --detectOpenHandles",
+    "test:ci": "jest --runInBand --ci --reporters=default --reporters=jest-html-reporters",
     "type-check": "tsc --noEmit",
     "test:report": "jest --reporters=default --reporters=jest-html-reporter",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write ."
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transformIgnorePatterns": [
+      "node_modules/(?!axios)"
+    ]
   },
   "repository": {
     "type": "git",

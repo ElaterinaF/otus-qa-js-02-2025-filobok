@@ -1,18 +1,15 @@
 /** @type {import('jest').Config} */
 const config = {
-  preset: 'ts-jest/presets/default-esm',
+  preset: 'ts-jest',
   testEnvironment: 'node',
-  extensionsToTreatAsEsm: ['.ts'],
-  moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1',
-    '^@/(.*)$': '<rootDir>/src/$1'
-  },
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   transform: {
     '^.+\\.tsx?$': [
       'ts-jest',
       {
-        useESM: true,
-        tsconfig: 'tsconfig.json'
+        tsconfig: 'tsconfig.json',
+        useESM: false, 
+        isolatedModules: true 
       }
     ]
   },
@@ -24,14 +21,18 @@ const config = {
         publicPath: "./reports",
         filename: "report.html",
         expand: true,
-        openReport: true,
         includeConsoleLog: true,
       }
     ]
   ],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  maxWorkers: 4,
-  workerIdleMemoryLimit: '512MB'
+  testPathIgnorePatterns: ['/node_modules/'],
+  maxWorkers: 1, 
+  globals: {
+    'ts-jest': {
+      diagnostics: false 
+    }
+  }
 };
 
-export default config;
+module.exports = config; 
